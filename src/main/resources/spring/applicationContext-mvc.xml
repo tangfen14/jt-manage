@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+
+	<!--开启mvc注解  -->
+	<mvc:annotation-driven/>
+	
+	<!--开启包扫描  此行代码可以不写,在spring核心配置文件applicationContext.xml中配置过一个全包路径的扫描,包含了Controller,
+	此处再次扫描会导致Controller的bean被创建两次,相当于后创建的对象将前面的覆盖掉一次,浪费了程序的性能;
+	springmvc和spring相当于是一个是子容器,一个是父容器,spring控制的更多,我们时通过前端控制器的方式来启动spring,
+	不管是什么配置文件,只要sevlet一启动,全部容器统统加载,并且只加载一次,不需要重复再写-->
+	<!-- <context:component-scan base-package="com.jt.manage.controller"/> -->
+	
+	<!--定义视图解析器  -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!--定义前缀和后缀  -->
+		<property name="prefix" value="/WEB-INF/views/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+		<!--定义文件上传视图解析器  规定id的值必须为multipartResolver-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--定义文件上传最大值 10M   1024*1024*10 =10485760 
+		为什么要设置最大?如果过大,光读的过程1.非常消耗计算性能2.非常占用内存空间,它要先导入到内存中,再从内存写入磁盘中-->
+		<property name="maxUploadSize" value="10485760"/>
+		<!--定义文件上传的编码  -->
+		<property name="defaultEncoding" value="UTF-8"/>
+	</bean>
+	
+	<!--放行静态资源文件  -->
+	<mvc:default-servlet-handler/>
+</beans>
